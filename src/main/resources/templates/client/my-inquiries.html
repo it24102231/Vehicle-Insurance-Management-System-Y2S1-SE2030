@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Inquiries - SecureGuard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            --secondary-gradient: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+            --success-gradient: linear-gradient(135deg, #ffffff 0%, #f1f3f4 100%);
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --hover-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            --nav-height: 85px;
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding-top: var(--nav-height);
+            min-height: 100vh;
+            color: #2d3748;
+        }
+
+        .navbar-modern {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            height: var(--nav-height);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .navbar-brand-modern {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            letter-spacing: -0.02em;
+        }
+
+        .navbar-brand-modern:hover {
+            transform: scale(1.05);
+        }
+
+        .brand-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 20px rgba(45, 55, 72, 0.3);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 1rem;
+        }
+
+        .nav-item-modern {
+            margin: 0;
+        }
+
+        .nav-link-modern {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-link-modern:hover {
+            background: rgba(45, 55, 72, 0.1);
+            color: #2d3748;
+            transform: translateY(-2px);
+        }
+
+        .nav-link-modern.active {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            color: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-link-modern i {
+            font-size: 1rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            color: #2d3748;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .user-profile:hover {
+            background: rgba(255, 255, 255, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            color: #2d3748;
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            line-height: 1.2;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: #6b7280;
+            line-height: 1.2;
+        }
+
+        .profile-dropdown {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            padding: 0.5rem 0;
+            min-width: 200px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-dropdown .dropdown-item {
+            padding: 0.75rem 1.25rem;
+            color: #374151;
+            transition: all 0.2s ease;
+            border-radius: 0;
+        }
+
+        .profile-dropdown .dropdown-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: #6366f1;
+        }
+
+        .profile-dropdown .dropdown-item.text-danger:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 100px auto 0;
+            padding: 0 2rem;
+            min-height: calc(100vh - 80px);
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+
+        .card-header-modern {
+            padding: 2rem 2rem 0 2rem;
+            border-bottom: none;
+            background: transparent;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .card-title-modern {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-subtitle-modern {
+            color: #718096;
+            font-size: 1rem;
+            margin: 0.5rem 0 0 0;
+            font-weight: 400;
+        }
+
+        .btn-primary-modern {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary-modern:hover {
+            box-shadow: var(--hover-shadow);
+        }
+
+        .inquiry-card.status-open {
+            border-left-color: #3182ce;
+        }
+
+        .inquiry-card.status-in-progress {
+            border-left-color: #d69e2e;
+        }
+
+        .inquiry-card.status-resolved {
+            border-left-color: #38a169;
+        }
+
+        .inquiry-card.status-closed {
+            border-left-color: #718096;
+        }
+
+        .inquiry-header {
+            display: flex;
+            justify-content: between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .inquiry-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0;
+            flex: 1;
+        }
+
+        .inquiry-meta {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background: linear-gradient(135deg, #3182ce, #2c5aa0);
+            color: white;
+        }
+
+        .badge-warning {
+            background: linear-gradient(135deg, #d69e2e, #b7791f);
+            color: white;
+        }
+
+        .badge-success {
+            background: linear-gradient(135deg, #38a169, #2f855a);
+            color: white;
+        }
+
+        .badge-secondary {
+            background: linear-gradient(135deg, #718096, #4a5568);
+            color: white;
+        }
+
+        .badge-danger {
+            background: linear-gradient(135deg, #e53e3e, #c53030);
+            color: white;
+        }
+
+        .badge-info {
+            background: linear-gradient(135deg, #3182ce, #2c5aa0);
+            color: white;
+        }
+
+        .inquiry-content {
+            color: #4a5568;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .inquiry-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .ticket-number {
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .btn-view-details {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view-details:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        .btn-new-inquiry {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            border: none;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-new-inquiry:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: #cbd5e0;
+            margin-bottom: 1rem;
+        }
+
+        .response-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #e2e8f0;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+        }
+
+        .response-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: #38a169;
+            font-weight: 600;
+        }
+
+        .response-content {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .inquiry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .inquiry-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin: 0;
+            flex: 1;
+        }
+
+        .inquiry-meta {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .inquiry-content {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .response-section {
+            background: rgba(56, 161, 105, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .response-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: #38a169;
+            font-weight: 600;
+        }
+
+        .response-content {
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .response-meta {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-top: 0.5rem;
+        }
+
+        .ticket-number {
+            font-family: 'Monaco', 'Consolas', monospace;
+            background: rgba(99, 102, 241, 0.1);
+            color: #6366f1;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        /* Ensure modals appear above any custom backdrops/overlays */
+        .modal {
+            z-index: 2000 !important;
+        }
+        .modal-backdrop {
+            z-index: 1500 !important;
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.35rem 0.75rem;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .badge-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .badge-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+
+        .badge-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .badge-info {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .badge-secondary {
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            color: white;
+        }
+
+        .ticket-number {
+            font-family: 'Monaco', 'Consolas', monospace;
+            background: rgba(45, 55, 72, 0.1);
+            color: #2d3748;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar-modern" id="navbar">
+        <div class="navbar-container">
+            <a class="navbar-brand-modern" href="/client/dashboard">
+                <div class="brand-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                SecureGuard
+            </a>
+            
+            <ul class="nav-menu">
+                <li class="nav-item-modern">
+                    <a class="nav-link-modern" href="/client/policies">
+                        <i class="fas fa-file-contract"></i>Policies
+                    </a>
+                </li>
+                <li class="nav-item-modern">
+                    <a class="nav-link-modern" href="/client/vehicles">
+                        <i class="fas fa-car"></i>Vehicles
+                    </a>
+                </li>
+                <li class="nav-item-modern">
+                    <a class="nav-link-modern" href="/client/my-policies">
+                        <i class="fas fa-folder-open"></i>My Policies
+                    </a>
+                </li>
+                <li class="nav-item-modern">
+                    <a class="nav-link-modern active" href="/inquiries/my-inquiries">
+                        <i class="fas fa-question-circle"></i>Inquiries
+                    </a>
+                </li>
+            </ul>
+            
+            <a href="#" class="user-profile dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="profile-avatar">
+                    <span th:text="${user != null ? (user.fullName.length() > 0 ? user.fullName.substring(0,1).toUpperCase() : 'U') + (user.fullName.indexOf(' ') > 0 && user.fullName.indexOf(' ') < user.fullName.length() - 1 ? user.fullName.substring(user.fullName.indexOf(' ')+1, user.fullName.indexOf(' ')+2).toUpperCase() : '') : 'JD'}">JD</span>
+                </div>
+                <div class="user-info">
+                    <div class="user-name" th:text="${user != null ? user.fullName : 'John Doe'}">John Doe</div>
+                    <div class="user-role">Premium User</div>
+                </div>
+                <i class="fas fa-chevron-down ms-2"></i>
+            </a>
+            
+            <!-- Profile Dropdown Menu -->
+            <ul class="dropdown-menu dropdown-menu-end profile-dropdown">
+                <li>
+                    <a class="dropdown-item" href="/client/profile">
+                        <i class="fas fa-user me-2"></i>
+                        Profile
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="/client/verification">
+                        <i class="fas fa-check-circle me-2"></i>
+                        Verification
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="/client/claims">
+                        <i class="fas fa-clipboard-check me-2"></i>
+                        My Claims
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <a class="dropdown-item text-danger" href="/logout">
+                        <i class="fas fa-sign-out-alt me-2"></i>
+                        Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Page Header -->
+        <div class="glass-card mb-4">
+            <div class="card-header-modern">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 class="card-title-modern">
+                            <i class="fas fa-question-circle me-2"></i>
+                            My Inquiries
+                        </h2>
+                        <p class="card-subtitle-modern">Track and manage your vehicle insurance inquiries</p>
+                    </div>
+                    <button class="btn btn-primary-modern" onclick="openInquiryModalHere()">
+                        <i class="fas fa-plus me-2"></i>New Inquiry
+                    </button>
+                </div>
+            </div>
+
+        <!-- Filters -->
+        <div class="glass-card mb-4">
+            <div class="card-body">
+                <form method="get" action="/inquiries/my-inquiries">
+                    <div class="row align-items-end">
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold">Status</label>
+                            <select name="status" class="form-select">
+                                <option value="">All Statuses</option>
+                                <option th:each="status : ${statuses}" 
+                                        th:value="${status}" 
+                                        th:text="${status.displayName}"
+                                        th:selected="${status.name() == currentStatus}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary-modern">
+                                <i class="fas fa-filter me-2"></i>Filter
+                            </button>
+                            <a href="/inquiries/my-inquiries" class="btn btn-outline-secondary ms-2">
+                                <i class="fas fa-times me-2"></i>Clear
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Inquiries List -->
+        <div th:if="${inquiries.content.size() > 0}">
+            <div th:each="inquiry : ${inquiries.content}" 
+                 th:class="'glass-card mb-3 status-' + ${inquiry.status.name().toLowerCase().replace('_', '-')}">
+                <div class="card-body">
+                    <div class="inquiry-header mb-3">
+                        <h3 class="inquiry-title" th:text="${inquiry.subject}">Inquiry Subject</h3>
+                        <div class="inquiry-meta">
+                            <span th:class="'badge ' + ${inquiry.statusBadgeClass}" th:text="${inquiry.statusDisplayName}">Status</span>
+                            <span th:class="'badge ' + ${inquiry.priorityBadgeClass}" th:text="${inquiry.priorityDisplayName}">Priority</span>
+                            <span class="badge badge-info" th:text="${inquiry.categoryDisplayName}">Category</span>
+                        </div>
+                    </div>
+                    <div class="inquiry-content mb-3">
+                        <p th:text="${#strings.abbreviate(inquiry.message, 200)}">Inquiry message preview...</p>
+                    </div>
+                    <!-- Response Section -->
+                    <div th:if="${inquiry.hasResponse()}" class="response-section mb-3">
+                        <div class="response-header">
+                            <i class="fas fa-reply"></i>
+                            <span>Response from <span th:text="${inquiry.supportStaffName}">Staff</span></span>
+                        </div>
+                        <div class="response-content" th:text="${inquiry.supportResponse}">Response content</div>
+                        <div class="response-meta">
+                            Responded on <span th:text="${#temporals.format(inquiry.respondedAt, 'MMM dd, yyyy HH:mm')}">Date</span>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="ticket-number" th:text="${inquiry.ticketNumber}">Ticket</span> • 
+                            Created <span th:text="${#temporals.format(inquiry.createdAt, 'MMM dd, yyyy HH:mm')}">Date</span>
+                        </div>
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-primary" th:onclick="|viewInquiryDetails(${inquiry.id})|">
+                                <i class="fas fa-eye me-2"></i>View
+                            </button>
+                            <button class="btn btn-outline-warning" 
+                                    th:if="${!inquiry.hasResponse()}"
+                                    th:onclick="|editInquiry(${inquiry.id})|">
+                                <i class="fas fa-edit me-2"></i>Edit
+                            </button>
+                            <button class="btn btn-outline-danger" 
+                                    th:if="${!inquiry.hasResponse()}"
+                                    th:onclick="|deleteInquiry(${inquiry.id})|">
+                                <i class="fas fa-trash me-2"></i>Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Inquiry Modal -->
+            <div class="modal fade" id="editInquiryModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="fas fa-edit me-2"></i>Edit Inquiry
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editInquiryForm" class="needs-validation" novalidate>
+                                <input type="hidden" id="editInquiryId">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold" for="editCategory">Category</label>
+                                        <select class="form-select" id="editCategory" name="category" required>
+                                            <option value="">Select Category</option>
+                                            <option th:each="category : ${T(com.secureguard.model.Inquiry.InquiryCategory).values()}"
+                                                    th:value="${category}"
+                                                    th:text="${category.displayName}">
+                                            </option>
+                                        </select>
+                                        <div class="invalid-feedback">Please select a category.</div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold" for="editPriority">Priority</label>
+                                        <select class="form-select" id="editPriority" name="priority" required>
+                                            <option value="">Select Priority</option>
+                                            <option th:each="priority : ${T(com.secureguard.model.Inquiry.InquiryPriority).values()}"
+                                                    th:value="${priority}"
+                                                    th:text="${priority.displayName}">
+                                            </option>
+                                        </select>
+                                        <div class="invalid-feedback">Please select a priority.</div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" for="editSubject">Subject</label>
+                                    <input type="text" class="form-control" id="editSubject" name="subject" required maxlength="200">
+                                    <div class="invalid-feedback">Please provide a subject.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold" for="editMessage">Message</label>
+                                    <textarea class="form-control" id="editMessage" name="message" rows="5" required maxlength="2000"></textarea>
+                                    <div class="invalid-feedback">Please provide a message.</div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" id="saveInquiryBtn">
+                                <i class="fas fa-save me-2"></i>Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delete Confirmation Modal -->
+            <div class="modal fade" id="deleteConfirmModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="fas fa-trash-alt me-2"></i>Delete Inquiry
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Are you sure you want to delete this inquiry?</p>
+                            <p class="text-danger">This action cannot be undone.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                                <i class="fas fa-trash-alt me-2"></i>Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div th:if="${inquiries.totalPages > 1}" class="d-flex justify-content-center mt-4">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li class="page-item" th:classappend="${inquiries.first} ? 'disabled'">
+                            <a class="page-link" 
+                               th:href="@{/inquiries/my-inquiries(page=${inquiries.number - 1}, status=${currentStatus})}">
+                                Previous
+                            </a>
+                        </li>
+                        
+                        <li th:each="pageNum : ${#numbers.sequence(0, inquiries.totalPages - 1)}" 
+                            class="page-item" 
+                            th:classappend="${pageNum == inquiries.number} ? 'active'">
+                            <a class="page-link" 
+                               th:href="@{/inquiries/my-inquiries(page=${pageNum}, status=${currentStatus})}" 
+                               th:text="${pageNum + 1}">1</a>
+                        </li>
+                        
+                        <li class="page-item" th:classappend="${inquiries.last} ? 'disabled'">
+                            <a class="page-link" 
+                               th:href="@{/inquiries/my-inquiries(page=${inquiries.number + 1}, status=${currentStatus})}">
+                                Next
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inquiry Detail Modal -->
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="detailModalLabel">
+                        <i class="fas fa-eye me-2"></i>Inquiry Details
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="detailContent">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Inquiry Modal -->
+    <div class="modal fade" id="createInquiryModal" tabindex="-1" aria-labelledby="createInquiryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="createInquiryModalLabel">
+                        <i class="fas fa-plus me-2"></i>Create New Inquiry
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="inquiryForm" class="needs-validation" novalidate>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold" for="category">Category</label>
+                                <select class="form-select" id="category" name="category" required>
+                                    <option value="">Select Category</option>
+                                    <option th:each="category : ${T(com.secureguard.model.Inquiry.InquiryCategory).values()}"
+                                            th:value="${category}"
+                                            th:text="${category.displayName}">
+                                    </option>
+                                </select>
+                                <div class="invalid-feedback">Please select a category.</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold" for="priority">Priority</label>
+                                <select class="form-select" id="priority" name="priority" required>
+                                    <option value="">Select Priority</option>
+                                    <option th:each="priority : ${T(com.secureguard.model.Inquiry.InquiryPriority).values()}"
+                                            th:value="${priority}"
+                                            th:text="${priority.displayName}">
+                                    </option>
+                                </select>
+                                <div class="invalid-feedback">Please select a priority.</div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" for="subject">Subject</label>
+                            <input type="text" class="form-control" id="subject" name="subject" required maxlength="200">
+                            <div class="invalid-feedback">Please provide a subject.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold" for="message">Message</label>
+                            <textarea class="form-control" id="message" name="message" rows="5" required maxlength="2000" placeholder="Please describe your inquiry in detail..."></textarea>
+                            <div class="invalid-feedback">Please provide a message.</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="submitInquiryBtn">
+                        <i class="fas fa-paper-plane me-2"></i>Submit Inquiry
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer style="background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%); color: white; padding: 3rem 0 1rem; margin-top: 4rem; margin-left: 0; margin-right: 0; width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw;">
+        <div class="container">
+            <div class="row mb-4">
+                <div class="col-md-4 mb-3">
+                    <h5 style="font-weight: 700; margin-bottom: 1.5rem;">
+                        <i class="fas fa-shield-alt me-2"></i>SecureGuard
+                    </h5>
+                    <p style="color: rgba(255,255,255,0.8); line-height: 1.8;">
+                        Your trusted partner in vehicle insurance. Protecting you on every journey with comprehensive coverage and 24/7 support.
+                    </p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h6 style="font-weight: 600; margin-bottom: 1.5rem;">Quick Links</h6>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="/client/policies" style="color: rgba(255,255,255,0.8); text-decoration: none; transition: color 0.3s;">
+                                <i class="fas fa-angle-right me-2"></i>View Policies
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="/client/my-policies" style="color: rgba(255,255,255,0.8); text-decoration: none; transition: color 0.3s;">
+                                <i class="fas fa-angle-right me-2"></i>My Policies
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="/client/claims" style="color: rgba(255,255,255,0.8); text-decoration: none; transition: color 0.3s;">
+                                <i class="fas fa-angle-right me-2"></i>My Claims
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 0.75rem;">
+                            <a href="/client/vehicles" style="color: rgba(255,255,255,0.8); text-decoration: none; transition: color 0.3s;">
+                                <i class="fas fa-angle-right me-2"></i>My Vehicles
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h6 style="font-weight: 600; margin-bottom: 1.5rem;">Contact Us</h6>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 0.75rem;">
+                        <i class="fas fa-phone me-2"></i>+94 11 234 5678
+                    </p>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 0.75rem;">
+                        <i class="fas fa-envelope me-2"></i>support@secureguard.lk
+                    </p>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 0.75rem;">
+                        <i class="fas fa-map-marker-alt me-2"></i>Colombo, Sri Lanka
+                    </p>
+                </div>
+            </div>
+            <hr style="border-color: rgba(255,255,255,0.2); margin: 2rem 0 1rem;">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p style="color: rgba(255,255,255,0.6); margin: 0; font-size: 0.9rem;">
+                        &copy; 2025 SecureGuard Insurance. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Cleanup function for modals
+        function cleanupModal(modalElement) {
+            if (!modalElement) return;
+            try {
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                if (modalInstance) {
+                    modalInstance.dispose();
+                }
+            } catch (e) {
+                // ignore
+            }
+
+            // Remove any leftover backdrops (could be multiple)
+            document.querySelectorAll('.modal-backdrop').forEach(function(b) {
+                b.remove();
+            });
+
+            // Remove modal show classes and aria attributes
+            modalElement.classList.remove('show');
+            modalElement.setAttribute('aria-hidden', 'true');
+            modalElement.style.display = '';
+
+            // Reset body classes/styles that Bootstrap may have added
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+        }
+
+        // Safely show a modal: cleanup any existing instance, append to body, ensure z-index and focus
+        function showModalSafe(modalId, options) {
+            const modalEl = document.getElementById(modalId);
+            if (!modalEl) return null;
+
+            // If modal is not a child of body, move it there to avoid stacking context problems
+            if (modalEl.parentNode !== document.body) {
+                document.body.appendChild(modalEl);
+            }
+
+            cleanupModal(modalEl);
+
+            const modal = new bootstrap.Modal(modalEl, options || {});
+            modal.show();
+
+            // Focus first focusable element inside modal once shown
+            modalEl.addEventListener('shown.bs.modal', function onShown() {
+                const focusable = modalEl.querySelector('input, button, select, textarea, a[href]');
+                if (focusable) focusable.focus();
+                modalEl.removeEventListener('shown.bs.modal', onShown);
+            });
+
+            // Ensure cleanup on hide
+            modalEl.addEventListener('hidden.bs.modal', function onceHidden() {
+                cleanupModal(modalEl);
+            }, { once: true });
+
+            return modal;
+        }
+
+        function hideModalSafe(modalId) {
+            const modalEl = document.getElementById(modalId);
+            if (!modalEl) return;
+            const instance = bootstrap.Modal.getInstance(modalEl);
+            if (instance) instance.hide();
+            cleanupModal(modalEl);
+        }
+
+        function viewInquiryDetails(inquiryId) {
+            fetch(`/inquiries/${inquiryId}`, { credentials: 'same-origin' })
+                .then(async response => {
+                    // Try to read response body as text and parse JSON when possible
+                    const text = await response.text();
+                    let data = null;
+                    try {
+                        data = text ? JSON.parse(text) : null;
+                    } catch (e) {
+                        data = null; // response was not JSON (e.g. HTML login page)
+                    }
+
+                    if (!response.ok) {
+                        const msg = data && data.error ? data.error : `${response.status} ${response.statusText}`;
+                        throw new Error(msg);
+                    }
+
+                    if (!data || typeof data !== 'object') {
+                        throw new Error('Unexpected response format from server');
+                    }
+
+                    return data;
+                })
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+
+                    const content = `
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Ticket Number:</strong><br>
+                                <span class="text-primary">${data.ticketNumber}</span>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Category:</strong><br>
+                                ${data.categoryDisplayName}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <strong>Status:</strong><br>
+                                <span class="badge ${data.statusBadgeClass}">${data.statusDisplayName}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Priority:</strong><br>
+                                <span class="badge ${data.priorityBadgeClass}">${data.priorityDisplayName}</span>
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Created:</strong><br>
+                                ${new Date(data.createdAt).toLocaleDateString()}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Subject:</strong><br>
+                            ${data.subject}
+                        </div>
+                        <div class="mb-3">
+                            <strong>Message:</strong><br>
+                            <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; white-space: pre-wrap;">${data.message}</div>
+                        </div>
+                        ${data.contactEmail ? `<div class="mb-3"><strong>Contact Email:</strong> ${data.contactEmail}</div>` : ''}
+                        ${data.contactPhone ? `<div class="mb-3"><strong>Contact Phone:</strong> ${data.contactPhone}</div>` : ''}
+                        ${data.hasResponse ? `
+                            <hr>
+                            <div class="response-section">
+                                <h6 class="text-success"><i class="fas fa-reply me-2"></i>Response from ${data.supportStaffName}</h6>
+                                <div style="background: #f0f9ff; padding: 1rem; border-radius: 8px; margin: 1rem 0; white-space: pre-wrap;">${data.supportResponse}</div>
+                                <small class="text-muted">Responded on ${new Date(data.respondedAt).toLocaleDateString()}</small>
+                            </div>
+                        ` : ''}
+                    `;
+
+                    document.getElementById('detailContent').innerHTML = content;
+                    showModalSafe('detailModal');
+                })
+                .catch(error => {
+                    // Try to show a helpful message from the server when possible
+                    alert('Error loading inquiry details: ' + error.message);
+                });
+        }
+
+        function showInquiryModal() {
+            // Redirect to dashboard with inquiry modal
+            window.location.href = '/client/dashboard#inquiry';
+        }
+
+        // Also provide a way to open inquiry modal directly on this page
+        function openInquiryModalHere(category = null) {
+            if (category) {
+                document.getElementById('category').value = category;
+            }
+            showModalSafe('createInquiryModal');
+        }
+
+        // Handle inquiry form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('inquiryForm');
+            const submitBtn = document.getElementById('submitInquiryBtn');
+            
+            if (submitBtn) {
+                submitBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    if (!form.checkValidity()) {
+                        e.stopPropagation();
+                        form.classList.add('was-validated');
+                        return;
+                    }
+                    
+                    const formData = new FormData(form);
+                    const inquiryData = {
+                        category: formData.get('category'),
+                        priority: formData.get('priority'),
+                        subject: formData.get('subject'),
+                        message: formData.get('message')
+                    };
+                    
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Submitting...';
+                    
+                    fetch('/inquiries/submit', {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(inquiryData)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Your inquiry has been submitted successfully! Ticket Number: ' + data.ticketNumber);
+                            form.reset();
+                            form.classList.remove('was-validated');
+                            bootstrap.Modal.getInstance(document.getElementById('createInquiryModal')).hide();
+                            window.location.reload();
+                        } else {
+                            throw new Error(data.error || 'Failed to submit inquiry');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error: ' + error.message);
+                    })
+                    .finally(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Inquiry';
+                    });
+                });
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle edit form submission
+            const editForm = document.getElementById('editInquiryForm');
+            const saveBtn = document.getElementById('saveInquiryBtn');
+            
+            if (saveBtn) {
+                saveBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    handleSaveEdit();
+                });
+            }
+
+            // Handle delete confirmation
+            const deleteBtn = document.getElementById('confirmDeleteBtn');
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    handleDelete();
+                });
+            }
+            // Ensure any modal hidden events cleanup leftover backdrops and modal instances
+            document.querySelectorAll('.modal').forEach(function(modalEl) {
+                modalEl.addEventListener('hidden.bs.modal', function() {
+                    // dispose instance + remove backdrop if left
+                    cleanupModal(modalEl);
+                });
+            });
+        });
+
+        function editInquiry(id) {
+            // Cleanup any existing modal
+            const modalElement = document.getElementById('editInquiryModal');
+            cleanupModal(modalElement);
+
+            fetch(`/inquiries/${id}`, { 
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (!data) throw new Error('No data received');
+                
+                // Populate the edit form
+                document.getElementById('editInquiryId').value = data.id;
+                document.getElementById('editCategory').value = data.category;
+                document.getElementById('editPriority').value = data.priority;
+                document.getElementById('editSubject').value = data.subject;
+                document.getElementById('editMessage').value = data.message;
+
+                // Show the modal using Bootstrap's direct method
+                // Clean up any existing modal instance
+                const existingModal = bootstrap.Modal.getInstance(document.getElementById('editInquiryModal'));
+                if (existingModal) {
+                    existingModal.dispose();
+                }
+                // Create and show new modal safely
+                showModalSafe('editInquiryModal');
+            })
+            .catch(error => {
+                alert('Error loading inquiry: ' + error.message);
+            });
+        }
+
+        function handleSaveEdit() {
+            const form = document.getElementById('editInquiryForm');
+            
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated');
+                return;
+            }
+
+            const inquiryId = document.getElementById('editInquiryId').value;
+            const inquiryData = {
+                category: document.getElementById('editCategory').value,
+                priority: document.getElementById('editPriority').value,
+                subject: document.getElementById('editSubject').value,
+                message: document.getElementById('editMessage').value
+            };
+
+            const saveBtn = document.getElementById('saveInquiryBtn');
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Saving...';
+
+            fetch(`/inquiries/${inquiryId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(inquiryData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Hide and cleanup the edit modal instance safely
+                    const modalEl = document.getElementById('editInquiryModal');
+                    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                    if (modalInstance) {
+                        modalInstance.hide();
+                    }
+                    // cleanup will run on hidden.bs.modal listener, but ensure backdrop removed
+                    cleanupModal(modalEl);
+                    alert('Inquiry updated successfully!');
+                    window.location.reload();
+                } else {
+                    throw new Error(data.error || 'Failed to update inquiry');
+                }
+            })
+            .catch(error => {
+                alert('Error: ' + error.message);
+            })
+            .finally(() => {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = '<i class="fas fa-save me-2"></i>Save Changes';
+            });
+        }
+
+        let inquiryToDelete = null;
+
+        function deleteInquiry(id) {
+            inquiryToDelete = id;
+            // Cleanup any existing modal
+            const modalElement = document.getElementById('deleteConfirmModal');
+            cleanupModal(modalElement);
+            // Create and show new modal safely
+            showModalSafe('deleteConfirmModal', { backdrop: 'static', keyboard: false });
+        }
+
+        function handleDelete() {
+            if (!inquiryToDelete) return;
+
+            const deleteBtn = document.getElementById('confirmDeleteBtn');
+            deleteBtn.disabled = true;
+            deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Deleting...';
+
+            fetch(`/inquiries/${inquiryToDelete}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Hide and cleanup delete modal instance safely
+                    const modalEl = document.getElementById('deleteConfirmModal');
+                    const modalInstance = bootstrap.Modal.getInstance(modalEl);
+                    if (modalInstance) {
+                        modalInstance.hide();
+                    }
+                    cleanupModal(modalEl);
+                    alert('Inquiry deleted successfully!');
+                    window.location.reload();
+                } else {
+                    throw new Error(data.error || 'Failed to delete inquiry');
+                }
+            })
+            .catch(error => {
+                alert('Error: ' + error.message);
+            })
+            .finally(() => {
+                deleteBtn.disabled = false;
+                deleteBtn.innerHTML = '<i class="fas fa-trash-alt me-2"></i>Delete';
+            });
+        }
+    </script>
+</body>
+</html>
