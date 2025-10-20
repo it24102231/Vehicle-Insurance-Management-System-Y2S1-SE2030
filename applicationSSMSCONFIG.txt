@@ -1,0 +1,48 @@
+# Database Configuration - Microsoft SQL Server
+spring.datasource.url=jdbc:sqlserver://localhost:1433;databaseName=insurance_company_db;encrypt=true;trustServerCertificate=true
+spring.datasource.username=sa
+spring.datasource.password=YOUR_PASSWORD_HERE
+spring.datasource.driver-class-name=com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+# JPA Configuration
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.SQLServerDialect
+spring.jpa.properties.hibernate.jdbc.time_zone=UTC
+
+# Thymeleaf Configuration
+spring.thymeleaf.cache=false
+spring.thymeleaf.prefix=classpath:/templates/
+spring.thymeleaf.suffix=.html
+
+# Server Configuration
+server.port=8080
+
+# Application Name
+app.name=SecureGuard Vehicle Insurance
+app.url=http://localhost:8080
+
+# Policy Manager Configuration
+policym.username=policym
+policym.password=policym123
+
+# Customer Support Manager Configuration
+supm.username=supm
+supm.password=supm123
+
+# Claim Manager Configuration
+claimm.username=claimm
+claimm.password=claimm123
+
+# Security Manager Configuration
+serm.username=serm
+serm.password=serm123
+
+# User Manager Configuration
+usem.username=usem
+usem.password=usem123
+
+# File Upload Configuration
+spring.servlet.multipart.enabled=true
+spring.servlet.multipart.max-file-size=50MB
+spring.servlet.multipart.max-request-size=100MB
